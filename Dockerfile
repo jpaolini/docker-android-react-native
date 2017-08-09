@@ -3,27 +3,41 @@ FROM ubuntu:17.04
 # ------------------------------------------------------
 # --- Install required tools
 # Dependencies to execute Android builds
-#RUN dpkg --add-architecture i386
-#RUN apt-get update -qq
-#RUN DEBIAN_FRONTEND=noninteractive apt-get install -y openjdk-8-jdk libc6:i386 libstdc++6:i386 libgcc1:i386 libncurses5:i386 libz1:i386
-RUN apt-get update -qq \
-    && apt-get install -y openjdk-8-jdk wget expect unzip vim \
-    && apt-get clean
+RUN dpkg --add-architecture i386 \
+  && apt-get update -qqy && apt-get -qqy install \
+    build-essential \
+    g++ \
+    git \
+    python \
+    openjdk-8-jdk \
+    wget \
+    expect \
+    unzip \
+    vim \
+    libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386 \
+  && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+
 
 # ------------------------------------------------------
 # --- Download Android SDK tools into $ANDROID_SDK_HOME
-
-RUN useradd -u 1000 -M -s /bin/bash android
-RUN chown 1000 /opt
-
 COPY tools /opt/tools
 
-COPY licenses /opt/licenses
-
-USER android
-
 RUN mkdir -p /opt/android-sdk-linux
+ENV ANDROID_HOME /opt/android-sdk-linux
 
 RUN "/opt/tools/android-sdk-update.sh"
+
+# Nodejs
+ENV NPM_CONFIG_LOGLEVEL info
+ARG NODE_VERSION=8.2.1
+RUN cd /opt/ && wget https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz \
+  && tar -zxf /opt/node-v${NODE_VERSION}-linux-x64.tar.gz -C /usr/local --strip-components=1 \
+  && rm "/opt/node-v$NODE_VERSION-linux-x64.tar.gz" \
+  && ln -s /usr/local/bin/node /usr/local/bin/nodejs
+
+# Yarn
+ARG YARN_VERSION=0.27.5
+RUN npm i -g yarn@${YARN_VERSION} \
+  && npm i -g react-native-cli
 
 VOLUME ["/opt/android-sdk-linux"]
