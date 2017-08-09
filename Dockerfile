@@ -1,8 +1,6 @@
 FROM ubuntu:17.04
 
-# ------------------------------------------------------
-# --- Install required tools
-# Dependencies to execute Android builds
+# Install dependencies
 RUN dpkg --add-architecture i386 \
   && apt-get update -qqy && apt-get -qqy install \
     build-essential \
@@ -17,9 +15,7 @@ RUN dpkg --add-architecture i386 \
     libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386 \
   && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
 
-
-# ------------------------------------------------------
-# --- Download Android SDK tools into $ANDROID_SDK_HOME
+# Setup Android
 COPY tools /opt/tools
 
 RUN mkdir -p /opt/android-sdk-linux
