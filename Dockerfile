@@ -35,15 +35,3 @@ RUN cd /opt/ && wget https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSI
 ARG YARN_VERSION=0.27.5
 RUN npm i -g yarn@${YARN_VERSION} \
   && npm i -g react-native-cli
-
-# Gradle
-ARG GRADLE_VERSION=2.14.1
-RUN cd /opt \
- && wget https://downloads.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -q -O gradle-bin.zip \
- && unzip "gradle-bin.zip" \
- && ln -s "/opt/gradle-${GRADLE_VERSION}/bin/gradle" /usr/local/bin/gradle \
- && rm "gradle-bin.zip"
-
-ENV GRADLE_HOME /usr/local/bin/gradle
-
-VOLUME ["/opt/android-sdk-linux"]
