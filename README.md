@@ -1,4 +1,6 @@
 # docker-android-react-native
+[![](https://images.microbadger.com/badges/image/jpaolini/docker-android-react-native.svg)](https://microbadger.com/images/jpaolini/docker-android-react-native "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/jpaolini/docker-android-react-native.svg)](https://microbadger.com/images/jpaolini/docker-android-react-native "Get your own version badge on microbadger.com")
+
 The purpose of this image is to provide a docker image for building android react-native applications.
 
 ## Defaults
