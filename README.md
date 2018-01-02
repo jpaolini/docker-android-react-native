@@ -33,43 +33,25 @@ docker run --rm -v REACT_NAITVE_ROOT:/app org/image:tag
 
 ## Signing Builds
 The default for this image is that the signing information is included in the project.
-This assumes that all keys are generated for more information on signing android builds go [here](https://facebook.github.io/react-native/docs/signed-apk-android.html)
+To setpup signing keys you can follow the [react-native-guide](https://facebook.github.io/react-native/docs/signed-apk-android.html)
 
-Here are some examples:
-
-### Using the react-native steps
+**Assumptions**
 * you followed the steps [here](https://facebook.github.io/react-native/docs/signed-apk-android.html) where in step 2 you added the key info to `~/.gradle/gradle.properties`
 
 * the keystore file is located in your project under `android/app`
 
-```
-docker run --rm -v REACT_NATIVE_ROOT:/app -v LOCAL_GRADLE_PROPERTIES:/root/.gradle/gradle.properties org/image:tag assembleRelease
-```
-
-### Using environment variables
-Follow the steps in the [react-native-guide](https://facebook.github.io/react-native/docs/signed-apk-android.html), then do the following
-
-1. the keystore file is located in your project under `android/app`
-
-2. modify your `android/build.gradle` to be:
+**Volume mount your gradle.properties**
 
 ```
-signingConfigs {
-    release {
-        storeFile rootProject.file("app/my-release-key.keystore")
-        storePassword System.getProperty("MYAPP_RELEASE_STORE_PASSWORD")
-        keyAlias System.getProperty("MYAPP_RELEASE_KEY_ALIAS")
-        keyPassword System.getProperty("MYAPP_RELEASE_KEY_PASSWORD")
-    }
-}
+docker run --rm -v REACT_NATIVE_ROOT:/app -v LOCAL_GRADLE_PROPERTIES:/root/.gradle/gradle.properties \
+org/image:tag assembleRelease
 ```
 
-3. set the environment variables at runtime
-
+**From the command line**
 ```
 docker run --rm -v REACT_NAITVE_ROOT:/app \
--e MYAPP_RELEASE_STORE_PASSWORD="my-password" \
--e MYAPP_RELEASE_KEY_ALIAS="my-alias" \
--e MYAPP_RELEASE_KEY_PASSWORD="my-key-password" \
-org/image:tag assembleRelease
+org/image:tag assembleRelease \
+-PMYAPP_RELEASE_STORE_PASSWORD="my-password" \
+-PMYAPP_RELEASE_KEY_ALIAS="my-alias" \
+-PMYAPP_RELEASE_KEY_PASSWORD="my-key-password" \
 ```
